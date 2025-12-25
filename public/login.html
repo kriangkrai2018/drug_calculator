@@ -22,5 +22,34 @@
             <button type="submit">เข้าสู่ระบบ</button>
         </form>
     </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    alert(data.message || 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ');
+                    return;
+                }
+                // เก็บ token และข้อมูลผู้ใช้สำหรับทดสอบ
+                localStorage.setItem('jwt_token', data.token);
+                localStorage.setItem('username', data.username);
+                localStorage.setItem('role', data.role);
+                alert('เข้าสู่ระบบสำเร็จ');
+                window.location.href = '/dashboard.html';
+            } catch (err) {
+                console.error('Login fetch error:', err);
+                alert('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้');
+            }
+        });
+    </script>
 </body>
 </html>

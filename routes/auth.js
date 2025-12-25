@@ -6,6 +6,12 @@ const jwt = require('jsonwebtoken');
 const { verifyToken } = require('./verifyToken');
 const { createNotification } = require('../utils/notifications');
 
+// Ensure there's a JWT secret for signing tokens (use a fallback for development)
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-please-change';
+if (!process.env.JWT_SECRET) {
+    console.warn('Warning: JWT_SECRET not set in environment. Using fallback secret (development only).');
+} 
+
 const promisePool = pool.promise();
 
 // (⭐⭐⭐ แก้ไข 1/2: เปลี่ยน Role เริ่มต้นกลับเป็น 'user' ⭐⭐⭐)
@@ -45,10 +51,12 @@ router.post('/login', async (req, res) => {
     const query = 'SELECT user_id, username, password_hash, role, is_approved, department_id FROM users WHERE username = ?';
     try {
         const [rows] = await promisePool.query(query, [username]);
+        console.log('Login attempt for:', username, 'rows:', rows.length);
         if (rows.length === 0) {
             return res.status(401).json({ error: true, message: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' });
         }
         const user = rows[0];
+        console.log('Found user row:', { user_id: user.user_id, username: user.username });
         const isMatch = await bcrypt.compare(password, user.password_hash);
         if (!isMatch) {
             return res.status(401).json({ error: true, message: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' });
@@ -61,10 +69,10 @@ router.post('/login', async (req, res) => {
             role: user.role,
             department_id: user.department_id
         };
-        const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, { expiresIn: '8h' });
+        const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '8h' });
         res.json({ token, role: user.role, username: user.username });
     } catch (err) {
-        console.error('Login error:', err);
+        console.error('Login error:', err && err.stack ? err.stack : err);
         res.status(500).json({ error: true, message: 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ' });
     }
 });

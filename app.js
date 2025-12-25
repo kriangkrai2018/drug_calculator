@@ -13,14 +13,14 @@ app.use(express.json()); // ใช้ express.json() แทน bodyParser
 app.use(express.urlencoded({ extended: true })); // ใช้ express.urlencoded() แทน bodyParser
 
 // --- API Routes ---
-// (ปิดไว้ชั่วคราวเนื่องจากไม่มีไฟล์ routes)
-// const authRouter = require(path.join(__dirname, "routes", "auth.js"));
-// const adminRouter = require(path.join(__dirname, 'routes', 'admin.js'));
-// const doctorRouter = require(path.join(__dirname, 'routes', 'doctor.js'));
+// Enable API routers
+const authRouter = require(path.join(__dirname, "routes", "auth.js"));
+const adminRouter = require(path.join(__dirname, 'routes', 'admin.js'));
+const doctorRouter = require(path.join(__dirname, 'routes', 'doctor.js'));
 
-// app.use("/api/auth", authRouter);
-// app.use("/api/admin", adminRouter);
-// app.use("/api/doctor", doctorRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/doctor", doctorRouter);
 
 // --- Serve Static Files ---
 // กำหนด Path ให้ชี้ไปที่โฟลเดอร์ public ในโปรเจกต์ปัจจุบัน
