@@ -2,7 +2,6 @@ const express = require("express");
 require('dotenv').config();
 const path = require('path');
 const cors = require("cors");
-const db = require('./db'); // เรียกใช้ไฟล์เชื่อมต่อ Database
 
 const app = express();
 const port = process.env.PORT_HTTP || 4200;
@@ -13,7 +12,6 @@ app.use(express.json()); // ใช้ express.json() แทน bodyParser
 app.use(express.urlencoded({ extended: true })); // ใช้ express.urlencoded() แทน bodyParser
 
 // --- API Routes ---
-// Enable API routers
 const authRouter = require(path.join(__dirname, "routes", "auth.js"));
 const adminRouter = require(path.join(__dirname, 'routes', 'admin.js'));
 const doctorRouter = require(path.join(__dirname, 'routes', 'doctor.js'));
@@ -23,8 +21,10 @@ app.use("/api/admin", adminRouter);
 app.use("/api/doctor", doctorRouter);
 
 // --- Serve Static Files ---
-// กำหนด Path ให้ชี้ไปที่โฟลเดอร์ public ในโปรเจกต์ปัจจุบัน
-const publicPath = path.join(__dirname, "public"); 
+// !! สำคัญ: กำหนด Path ไปยังโฟลเดอร์ public ของคุณให้ถูกต้อง !!
+// นี่เป็น Path แบบตายตัว (Hardcoded) ที่เคยทำงานได้ในเครื่องของคุณ
+// หากคุณย้ายโปรเจกต์ไปไว้ที่อื่น จะต้องมาแก้ไข Path นี้ใหม่
+const publicPath = "C:/xampp/htdocs/my-webapp2/public"; 
 app.use(express.static(publicPath));
 
 // --- Handle Page Navigation ---
@@ -38,3 +38,4 @@ app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
     console.log(`Serving static files from: ${publicPath}`);
 });
+
