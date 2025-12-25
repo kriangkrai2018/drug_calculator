@@ -12,19 +12,18 @@ app.use(express.json()); // ใช้ express.json() แทน bodyParser
 app.use(express.urlencoded({ extended: true })); // ใช้ express.urlencoded() แทน bodyParser
 
 // --- API Routes ---
-const authRouter = require(path.join(__dirname, "routes", "auth.js"));
-const adminRouter = require(path.join(__dirname, 'routes', 'admin.js'));
-const doctorRouter = require(path.join(__dirname, 'routes', 'doctor.js'));
+// (ปิดไว้ชั่วคราวเนื่องจากไม่มีไฟล์ routes)
+// const authRouter = require(path.join(__dirname, "routes", "auth.js"));
+// const adminRouter = require(path.join(__dirname, 'routes', 'admin.js'));
+// const doctorRouter = require(path.join(__dirname, 'routes', 'doctor.js'));
 
-app.use("/api/auth", authRouter);
-app.use("/api/admin", adminRouter);
-app.use("/api/doctor", doctorRouter);
+// app.use("/api/auth", authRouter);
+// app.use("/api/admin", adminRouter);
+// app.use("/api/doctor", doctorRouter);
 
 // --- Serve Static Files ---
-// !! สำคัญ: กำหนด Path ไปยังโฟลเดอร์ public ของคุณให้ถูกต้อง !!
-// นี่เป็น Path แบบตายตัว (Hardcoded) ที่เคยทำงานได้ในเครื่องของคุณ
-// หากคุณย้ายโปรเจกต์ไปไว้ที่อื่น จะต้องมาแก้ไข Path นี้ใหม่
-const publicPath = "C:/xampp/htdocs/my-webapp2/public"; 
+// กำหนด Path ให้ชี้ไปที่โฟลเดอร์ public ในโปรเจกต์ปัจจุบัน
+const publicPath = path.join(__dirname, "public"); 
 app.use(express.static(publicPath));
 
 // --- Handle Page Navigation ---
@@ -38,4 +37,3 @@ app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
     console.log(`Serving static files from: ${publicPath}`);
 });
-
