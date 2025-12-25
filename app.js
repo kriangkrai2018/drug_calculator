@@ -2,6 +2,7 @@ const express = require("express");
 require('dotenv').config();
 const path = require('path');
 const cors = require("cors");
+const db = require('./db'); // เรียกใช้ไฟล์เชื่อมต่อ Database
 
 const app = express();
 const port = process.env.PORT_HTTP || 4200;
